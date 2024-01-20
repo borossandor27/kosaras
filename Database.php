@@ -1,46 +1,56 @@
+
+<?php
+
 class Database {
-private $host = "localhost";
-private $username = "root";
-private $password = "";
-private $database = "webshop";
+
+    private $host = "localhost";
+    private $username = "root";
+    private $password = "";
+    private $database = "webshop";
 
 // Constructor
-public function __construct() {
-// Connect to the database
-$this->connect();
-}
+    public function __construct() {
+        // Connect to the database
+        $this->connect();
+    }
 
 // Connect to the database
-private function connect() {
-$conn = new mysqli($this->host, $this->username, $this->password, $this->database);
+    private function connect() {
+        $this->conn = new mysqli($this->host, $this->username, $this->password, $this->database);
 
 // Check connection
-if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
-}
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
+        }
+        //-- echo "Connected successfully";
+    }
 
-echo "Connected successfully";
-}
+    public function getAllTermekCards() {
+        $response = "";
+        $sql = "SELECT `termekid`,`termeknev`,`termekdb`,`termekar`,`fajta` FROM `termekek`";
+        $result = $this->conn->query($sql);
 
-public function getAllTermekCards() {
-$response="";
-$sql = "SELECT `termekid`,`termeknev`,`termekdb`,`termekar`,`fajta` FROM `termekek`";
-$result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $response .= $this->termekCard($row["termekid"], $row["termeknev"], $row["termekdb"], $row["termekar"], $row["fajta"]);
+            }
+        } else {
+            $response = "No results found";
+        }
+        return $response;
+    }
 
-if ($result->num_rows > 0) {
-while ($row = $result->fetch_assoc()) {
-$response+= termekCard($row["termekid"], $row["termeknev"], $row["termekdb"], $row["termekar"], $row["fajta"]); }
-} else {
-echo "No results found";
-}
-}
-private function termekCard($termekid, $termeknev, $termekdb, $termekar, $fajta) {
-return '<div class="card">'.
-    '<div class="card-body">'.$termekid. 
-        '<p>Termek nev: ' . $termeknev . '</p>'.
-        '<p>Termek db: ' . $termekdb . '</p>'.
-        '<p>Termek ar: ' . $termekar . '</p>'.
-        '<p>Fajta: ' . $fajta . '</p>'.
-        '</div></div>';
-}
+    private function termekCard($termekid, $termeknev, $termekdb, $termekar, $fajta) {
+        $kep ="images\\". ($fajta=="macska"?"Smiling-Cat.png":"Smiling-Dog.jpg");
+        $card = '<div class="card m-1" style="width: 18rem;float: left;">' .
+                '<img src="'.$kep.'" class="card-img-top" alt="'.$fajta.'">'.
+                '<div class="card-body">' . 
+                '<h5 class="card-title">' . $termeknev . '</h5>' .
+                '<p class="card-text">' . number_format($termekdb, 0, ',', ' ') . ' db</p>' .
+                '<p class="card-text">Termek ar: ' . number_format($termekar, 0, ',', ' ') . ' Ft</p>' .
+                '<a href="#?kosarba&termekid='.$termekid.'" class="btn btn-outline-secondary"><i class="fa-solid fa-cart-plus"></i> Kosárba</a>'.
+                '</div>
+        </div>';
+        return $card;
+    }
 }
