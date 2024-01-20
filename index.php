@@ -48,5 +48,6 @@ require_once 'tartalom.php';
 ?>
 
 </div>
+    <script src="js/kosaras.js"></script>
 </body>
 </html>
