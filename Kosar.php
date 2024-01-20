@@ -14,12 +14,12 @@ class Kosar {
         $this->items = [];
     }
 
-    public function setItem($termekId, $termekNev, $egysegAr, $db) {
+    public function addItem($termekId, $termekNev, $egysegAr, $db) {
         
         $db=(preg_match('/^\d+$/', $db)) ? $db : 1;
         $egysegAr=(preg_match('/^\d+$/', $egysegAr)) ? $egysegAr : -1;
         $termekId=(preg_match('/^\d+$/', $termekId)) ? $termekId : 1;
-        $this->items[$termekId] = array("id" => $termekId, "megnev" => $termekNev, "egysegar" => $egysegAr, "db" => $db);
+        $this->items[] = array("id" => $termekId, "megnev" => $termekNev, "egysegar" => $egysegAr, "db" => $db);
     }
 
     public function removeItem($termekId) {

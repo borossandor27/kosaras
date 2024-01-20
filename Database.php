@@ -26,7 +26,7 @@ class Database {
     }
 
     public function getAllTermekCards() {
-        $response = "";
+        $response = "<form action='#?kosar' method='post'>";
         $sql = "SELECT `termekid`,`termeknev`,`termekdb`,`termekar`,`fajta` FROM `termekek`";
         $result = $this->conn->query($sql);
 
@@ -37,18 +37,23 @@ class Database {
         } else {
             $response = "No results found";
         }
-        return $response;
+        return $response . "</form>";
     }
 
     private function termekCard($termekid, $termeknev, $termekdb, $termekar, $fajta) {
         $kep ="images\\". ($fajta=="macska"?"Smiling-Cat.png":"Smiling-Dog.jpg");
-        $card = '<div class="card m-1" style="width: 18rem;float: left;">' .
+        $inputdb='<input type="number" id="rendelesdb" name="rendelesdb" min="0" max="'.$termekdb.'" value="0">';
+        $button='<button type="submit" class="btn btn-outline-secondary" name="kosarba" value="1"><i class="fa-solid fa-cart-plus"></i> Kosárba</button>';
+        $card = '<div class="card m-2" style="width: 18rem;float: left;">' .
                 '<img src="'.$kep.'" class="card-img-top" alt="'.$fajta.'">'.
                 '<div class="card-body">' . 
-                '<h5 class="card-title">' . $termeknev . '</h5>' .
-                '<p class="card-text">' . number_format($termekdb, 0, ',', ' ') . ' db</p>' .
-                '<p class="card-text">Termek ar: ' . number_format($termekar, 0, ',', ' ') . ' Ft</p>' .
-                '<a href="#?kosarba&termekid='.$termekid.'" class="btn btn-outline-secondary"><i class="fa-solid fa-cart-plus"></i> Kosárba</a>'.
+                '<h5 class="card-title text-center">' . $termeknev . '</h5>' .
+                '<p class="card-text text-center">' . number_format($termekdb, 0, ',', ' ') . '/'.$inputdb.' db</p>' .
+                '<p class="card-text text-center">Egységár: ' . number_format($termekar, 0, ',', ' ') . ' Ft</p>' .
+                '<p class="text-center">'.$button.'</p>'.
+                '<input type="hidden" name="termekid" value="'.$termekid.'">'.
+                '<input type="hidden" name="termekar" value="'.$termekar.'">'.
+                '<input type="hidden" name="termeknev" value="'.$termeknev.'">'.
                 '</div>
         </div>';
         return $card;

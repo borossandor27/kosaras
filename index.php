@@ -5,6 +5,11 @@ session_start();
 require_once './Database.php';
 require_once './Kosar.php';
 $db = new Database();
+
+if (!isset($_SESSION['kosar'])) {
+    $_SESSION['kosar'] = new Kosar();
+}
+
 ?>
 <!DOCTYPE html>
 <html>

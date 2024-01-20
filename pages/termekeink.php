@@ -1,5 +1,16 @@
-<h1>Termékeink</h1>
-<div id="lebegoKerdes">
+<?php
+var_dump($_POST);
+var_dump($_SESSION['kosar']);
+if(filter_input(INPUT_POST, "kosarba",FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)){
+    $rendelesdb = filter_input(INPUT_POST, "rendelesdb", FILTER_SANITIZE_NUMBER_INT);
+    //-- Csak akkor tesszük a kosárba, ha a rendelt darabszám nagyobb, mint 0
+    if($rendelesdb>0){
+    $termekid = filter_input(INPUT_POST, "termekid", FILTER_VALIDATE_INT | FILTER_SANITIZE_NUMBER_INT);
+    $termekar = filter_input(INPUT_POST, "termekar", FILTER_VALIDATE_INT | FILTER_SANITIZE_NUMBER_INT);
+    $termeknev = filter_input(INPUT_POST, "termeknev", FILTER_SANITIZE_STRING);
+    $_SESSION['kosar']->addTermek($termekid, $termeknev,$termekar, $rendelesdb);
+    ?>
+    <div id="lebegoKerdes">
     <div class="d-flex p-2">
         <p class="d-flex justify-content-center text-center w-100">Kérdés szöveg</p>
     </div>
@@ -8,8 +19,13 @@
         <a href="#?kosar" class="btn btn-outline-dark mt-2">Ugrás a kosárra</a>
     </div>
 </div>
+<?php
+    }}
+?>
+<h1>Termékeink</h1>
+
 <div class="d-flex">
-    <aside class="align-self-stretch p-3" id="termekFilter" style="width: 200rem;">
+    <aside class="align-self-stretch p-3" id="termekFilter" style="width: 100rem;">
         <div>
             <fieldset>
                 <legend> Kategóriák </legend>
